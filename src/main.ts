@@ -59,6 +59,7 @@ const voiceReady = new Set<string>();
 
 const randomBetween = (min: number, max: number) => min + Math.random() * (max - min);
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+const resolveAssetUrl = (path: string) => new URL(path, document.baseURI).toString();
 
 const getBounds = () => {
   const rect = gameLayer?.getBoundingClientRect();
@@ -114,12 +115,12 @@ const createActor = (definition: AnimalDefinition): AnimalActor => {
     const sprite = document.createElement('span');
     sprite.className = 'animal-sprite';
     sprite.style.setProperty('--frames', String(definition.animation.frames));
-    sprite.style.setProperty('--sprite-url', `url("${definition.animation.path}")`);
+    sprite.style.setProperty('--sprite-url', `url("${resolveAssetUrl(definition.animation.path)}")`);
     visual = sprite;
   } else {
     const image = document.createElement('img');
     image.alt = definition.nameZh;
-    image.src = `assets/characters/${definition.id}.svg`;
+    image.src = resolveAssetUrl(`assets/characters/${definition.id}.svg`);
     image.draggable = false;
     image.addEventListener('dragstart', (event) => {
       event.preventDefault();
@@ -249,7 +250,7 @@ const tick = (time: number) => {
 };
 
 const createAudioElement = (path: string) => {
-  const audio = new Audio(path);
+  const audio = new Audio(resolveAssetUrl(path));
   audio.preload = 'auto';
   audio.setAttribute('playsinline', 'true');
   audio.load();
