@@ -83,10 +83,11 @@ const chooseAnimal = () => {
   return pool[Math.floor(Math.random() * pool.length)];
 };
 
-const hasEnoughSpace = (x: number, y: number, footprint: number) =>
+const hasEnoughSpace = (x: number, y: number, width: number, height: number) =>
   actors.every((actor) => {
-    const distance = Math.hypot(actor.x - x, actor.y - y);
-    return distance > (actor.footprint + footprint) * 0.48;
+    const minGapX = (actor.width + width) * 0.5 + 12;
+    const minGapY = (actor.height + height) * 0.5 + 10;
+    return Math.abs(actor.x - x) > minGapX || Math.abs(actor.y - y) > minGapY;
   });
 
 const chooseY = (definition: AnimalDefinition, height: number, groundY: number) => {
@@ -139,7 +140,7 @@ const createActor = (definition: AnimalDefinition): AnimalActor => {
 
   let x = randomBetween(width * 0.55, bounds.width - width * 0.55);
   let y = chooseY(definition, bounds.height, bounds.groundY);
-  for (let attempt = 0; attempt < 24 && !hasEnoughSpace(x, y, footprint); attempt += 1) {
+  for (let attempt = 0; attempt < 40 && !hasEnoughSpace(x, y, width, height); attempt += 1) {
     x = randomBetween(width * 0.55, bounds.width - width * 0.55);
     y = chooseY(definition, bounds.height, bounds.groundY);
   }
@@ -219,6 +220,27 @@ const updateActor = (actor: AnimalActor, deltaSeconds: number, elapsedSeconds: n
   if (actor.x < edgePadding || actor.x > bounds.width - edgePadding) {
     actor.x = clamp(actor.x, edgePadding, bounds.width - edgePadding);
     actor.vx *= -1;
+  }
+
+  for (const other of actors) {
+    if (other.id === actor.id) {
+      continue;
+    }
+
+    const overlapX = (actor.width + other.width) * 0.5 + 10 - Math.abs(actor.x - other.x);
+    const overlapY = (actor.height + other.height) * 0.5 + 8 - Math.abs(actor.y - other.y);
+
+    if (overlapX <= 0 || overlapY <= 0) {
+      continue;
+    }
+
+    const direction = actor.x <= other.x ? -1 : 1;
+    actor.x += direction * Math.min(overlapX * 0.35, 8);
+    actor.vx = Math.abs(actor.vx) * direction;
+
+    if (actor.definition.movementType !== 'fly') {
+      actor.y = Math.min(actor.y, other.y + Math.sign(actor.y - other.y || -1) * overlapY * 0.15);
+    }
   }
 
   const tilt = actor.definition.movementType === 'fly' ? Math.sin(actor.phase) * 5 : Math.sin(actor.phase) * 2;
