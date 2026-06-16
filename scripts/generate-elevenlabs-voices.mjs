@@ -5,6 +5,41 @@ const cwd = process.cwd();
 const envPath = path.join(cwd, '.env.local');
 const outputDir = path.join(cwd, 'public', 'assets', 'audio', 'voice');
 const letters = Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+const onlyMode = process.argv.find((arg) => arg.startsWith('--only='))?.split('=')[1];
+const teacherVoiceSettings = {
+  stability: 0.88,
+  similarity_boost: 0.78,
+  style: 0.08,
+  use_speaker_boost: true
+};
+const letterPronunciations = {
+  A: 'ay',
+  B: 'bee',
+  C: 'see',
+  D: 'dee',
+  E: 'E',
+  F: 'ef',
+  G: 'gee',
+  H: 'aitch',
+  I: 'eye',
+  J: 'jay',
+  K: 'kay',
+  L: 'el',
+  M: 'em',
+  N: 'en',
+  O: 'oh',
+  P: 'pee',
+  Q: 'cue',
+  R: 'are',
+  S: 'ess',
+  T: 'tee',
+  U: 'you',
+  V: 'vee',
+  W: 'double you',
+  X: 'ex',
+  Y: 'why',
+  Z: 'zee'
+};
 
 const voiceLines = [
   { id: 'butterfly', text: '蝴蝶', languageCode: 'zh' },
@@ -39,10 +74,27 @@ const voiceLines = [
   { id: 'number-9', text: '九', languageCode: 'zh' },
   ...letters.map((letter) => ({
     id: `letter-${letter.toLowerCase()}`,
-    text: letter,
-    languageCode: 'en'
+    text: letterPronunciations[letter],
+    languageCode: 'en',
+    voiceSettings: teacherVoiceSettings
   }))
 ];
+
+const selectedVoiceLines = voiceLines.filter((line) => {
+  if (!onlyMode) {
+    return true;
+  }
+  if (onlyMode === 'letters') {
+    return line.id.startsWith('letter-');
+  }
+  if (onlyMode === 'numbers') {
+    return line.id.startsWith('number-');
+  }
+  if (onlyMode === 'animals') {
+    return !line.id.startsWith('letter-') && !line.id.startsWith('number-');
+  }
+  return line.id === onlyMode;
+});
 
 const parseEnvFile = async () => {
   try {
@@ -80,7 +132,7 @@ if (!apiKey) {
 
 await mkdir(outputDir, { recursive: true });
 
-for (const line of voiceLines) {
+for (const line of selectedVoiceLines) {
   const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`, {
     method: 'POST',
     headers: {
@@ -90,7 +142,8 @@ for (const line of voiceLines) {
     body: JSON.stringify({
       text: line.text,
       model_id: modelId,
-      language_code: line.languageCode
+      language_code: line.languageCode,
+      voice_settings: line.voiceSettings
     })
   });
 
