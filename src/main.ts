@@ -222,27 +222,6 @@ const updateActor = (actor: AnimalActor, deltaSeconds: number, elapsedSeconds: n
     actor.vx *= -1;
   }
 
-  for (const other of actors) {
-    if (other.id === actor.id) {
-      continue;
-    }
-
-    const overlapX = (actor.width + other.width) * 0.5 + 10 - Math.abs(actor.x - other.x);
-    const overlapY = (actor.height + other.height) * 0.5 + 8 - Math.abs(actor.y - other.y);
-
-    if (overlapX <= 0 || overlapY <= 0) {
-      continue;
-    }
-
-    const direction = actor.x <= other.x ? -1 : 1;
-    actor.x += direction * Math.min(overlapX * 0.35, 8);
-    actor.vx = Math.abs(actor.vx) * direction;
-
-    if (actor.definition.movementType !== 'fly') {
-      actor.y = Math.min(actor.y, other.y + Math.sign(actor.y - other.y || -1) * overlapY * 0.15);
-    }
-  }
-
   const tilt = actor.definition.movementType === 'fly' ? Math.sin(actor.phase) * 5 : Math.sin(actor.phase) * 2;
   const flip = actor.vx < 0 ? -1 : 1;
   actor.element.style.transform = `translate3d(${actor.x - actor.width / 2}px, ${actor.y - actor.height / 2}px, 0) rotate(${tilt}deg) scaleX(${flip})`;
