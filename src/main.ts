@@ -7,6 +7,7 @@ interface AnimalActor {
   id: string;
   definition: AnimalDefinition;
   element: HTMLButtonElement;
+  visual: HTMLElement;
   x: number;
   y: number;
   vx: number;
@@ -84,7 +85,7 @@ const createActor = (definition: AnimalDefinition): AnimalActor => {
   const speed = randomBetween(definition.speedRange[0], definition.speedRange[1]);
   const direction = Math.random() > 0.5 ? 1 : -1;
   const element = document.createElement('button');
-  const image = document.createElement('img');
+  let visual: HTMLElement;
 
   element.className = `animal animal-${definition.movementType}`;
   element.type = 'button';
@@ -93,10 +94,25 @@ const createActor = (definition: AnimalDefinition): AnimalActor => {
   element.style.width = `${size}px`;
   element.style.height = `${size}px`;
 
-  image.alt = definition.nameZh;
-  image.src = `assets/characters/${definition.id}.svg`;
-  image.draggable = false;
-  element.append(image);
+  if (definition.animation) {
+    const sprite = document.createElement('span');
+    sprite.className = 'animal-sprite';
+    sprite.style.setProperty('--frames', String(definition.animation.frames));
+    sprite.style.setProperty('--sprite-url', `url("${definition.animation.path}")`);
+    sprite.style.animationDuration = `${definition.animation.frames / definition.animation.fps}s`;
+    visual = sprite;
+  } else {
+    const image = document.createElement('img');
+    image.alt = definition.nameZh;
+    image.src = `assets/characters/${definition.id}.svg`;
+    image.draggable = false;
+    image.addEventListener('dragstart', (event) => {
+      event.preventDefault();
+    });
+    visual = image;
+  }
+
+  element.append(visual);
   gameLayer?.append(element);
 
   let x = randomBetween(size * 0.55, bounds.width - size * 0.55);
@@ -110,6 +126,7 @@ const createActor = (definition: AnimalDefinition): AnimalActor => {
     id: `${definition.id}-${crypto.randomUUID()}`,
     definition,
     element,
+    visual,
     x,
     y,
     vx: speed * direction,
@@ -124,9 +141,6 @@ const createActor = (definition: AnimalDefinition): AnimalActor => {
     handleTap(actor);
   });
   element.addEventListener('dragstart', (event) => {
-    event.preventDefault();
-  });
-  image.addEventListener('dragstart', (event) => {
     event.preventDefault();
   });
 
@@ -388,6 +402,9 @@ const handleTap = (actor: AnimalActor) => {
   actor.element.classList.remove('is-tapped');
   void actor.element.offsetWidth;
   actor.element.classList.add('is-tapped');
+  window.setTimeout(() => {
+    actor.element.classList.remove('is-tapped');
+  }, 260);
 
   if (muted) {
     return;

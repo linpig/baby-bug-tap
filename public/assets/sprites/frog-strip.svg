@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 120">
+  <g transform="translate(0 0)">
+    <ellipse cx="60" cy="78" rx="30" ry="24" fill="#62cc69" stroke="#2f7437" stroke-width="5"/>
+    <circle cx="46" cy="54" r="13" fill="#62cc69" stroke="#2f7437" stroke-width="5"/>
+    <circle cx="74" cy="54" r="13" fill="#62cc69" stroke="#2f7437" stroke-width="5"/>
+    <circle cx="46" cy="54" r="4" fill="#243038"/>
+    <circle cx="74" cy="54" r="4" fill="#243038"/>
+    <path d="M42 94 L30 106 M78 94 L90 106" stroke="#2f7437" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(120 0)">
+    <ellipse cx="60" cy="74" rx="28" ry="22" fill="#62cc69" stroke="#2f7437" stroke-width="5"/>
+    <circle cx="46" cy="49" r="13" fill="#62cc69" stroke="#2f7437" stroke-width="5"/>
+    <circle cx="74" cy="49" r="13" fill="#62cc69" stroke="#2f7437" stroke-width="5"/>
+    <circle cx="46" cy="49" r="4" fill="#243038"/>
+    <circle cx="74" cy="49" r="4" fill="#243038"/>
+    <path d="M42 90 L26 100 M78 90 L94 100" stroke="#2f7437" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(240 0)">
+    <ellipse cx="60" cy="66" rx="24" ry="19" fill="#62cc69" stroke="#2f7437" stroke-width="5"/>
+    <circle cx="46" cy="42" r="12" fill="#62cc69" stroke="#2f7437" stroke-width="5"/>
+    <circle cx="74" cy="42" r="12" fill="#62cc69" stroke="#2f7437" stroke-width="5"/>
+    <circle cx="46" cy="42" r="4" fill="#243038"/>
+    <circle cx="74" cy="42" r="4" fill="#243038"/>
+    <path d="M42 82 L20 94 M78 82 L100 94" stroke="#2f7437" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(360 0)">
+    <ellipse cx="60" cy="74" rx="28" ry="22" fill="#62cc69" stroke="#2f7437" stroke-width="5"/>
+    <circle cx="46" cy="49" r="13" fill="#62cc69" stroke="#2f7437" stroke-width="5"/>
+    <circle cx="74" cy="49" r="13" fill="#62cc69" stroke="#2f7437" stroke-width="5"/>
+    <circle cx="46" cy="49" r="4" fill="#243038"/>
+    <circle cx="74" cy="49" r="4" fill="#243038"/>
+    <path d="M42 90 L28 103 M78 90 L92 103" stroke="#2f7437" stroke-width="5" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -1,6 +1,13 @@
 export type MovementType = 'crawl' | 'fly' | 'hop';
 
+export interface SpriteAnimation {
+  fps: number;
+  frames: number;
+  path: string;
+}
+
 export interface AnimalDefinition {
+  animation?: SpriteAnimation;
   id: string;
   nameZh: string;
   spriteKey: string;
@@ -18,7 +25,12 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-butterfly',
     movementType: 'fly',
     size: 88,
-    speedRange: [28, 44]
+    speedRange: [28, 44],
+    animation: {
+      fps: 6,
+      frames: 4,
+      path: 'assets/sprites/butterfly-strip.svg'
+    }
   },
   {
     id: 'ladybug',
@@ -45,7 +57,12 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-ant',
     movementType: 'crawl',
     size: 78,
-    speedRange: [18, 34]
+    speedRange: [18, 34],
+    animation: {
+      fps: 7,
+      frames: 4,
+      path: 'assets/sprites/ant-strip.svg'
+    }
   },
   {
     id: 'caterpillar',
@@ -72,7 +89,12 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-frog',
     movementType: 'hop',
     size: 88,
-    speedRange: [22, 38]
+    speedRange: [22, 38],
+    animation: {
+      fps: 5,
+      frames: 4,
+      path: 'assets/sprites/frog-strip.svg'
+    }
   },
   {
     id: 'bird',
