@@ -36,6 +36,12 @@ const applySpriteFrame = (actor: AnimalActor) => {
   actor.visual.style.transform = `translate3d(0, ${offsetY}px, 0) rotate(${tilt}deg)`;
 };
 
+const applyActorTransform = (actor: AnimalActor) => {
+  const tilt = actor.definition.movementType === 'fly' ? Math.sin(actor.phase) * 5 : Math.sin(actor.phase) * 2;
+  const flip = actor.definition.displayText ? 1 : actor.vx < 0 ? -1 : 1;
+  actor.element.style.transform = `translate3d(${actor.x - actor.width / 2}px, ${actor.y - actor.height / 2}px, 0) rotate(${tilt}deg) scaleX(${flip})`;
+};
+
 const shell = document.querySelector<HTMLElement>('#game-shell');
 const gameLayer = document.querySelector<HTMLElement>('#game-container');
 const soundToggle = document.querySelector<HTMLButtonElement>('#sound-toggle');
@@ -51,7 +57,7 @@ document.addEventListener('dragstart', (event) => {
 const actors: AnimalActor[] = [];
 const TARGET_VISIBLE_BY_MODE: Record<GameMode, number> = {
   animals: 20,
-  letters: 18,
+  letters: 26,
   numbers: 14
 };
 let muted = false;
@@ -71,6 +77,8 @@ let currentMode: GameMode | null = null;
 const randomBetween = (min: number, max: number) => min + Math.random() * (max - min);
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 const resolveAssetUrl = (path: string) => new URL(path, document.baseURI).toString();
+const isLetterDefinition = (definition: AnimalDefinition) => definition.id.startsWith('letter-');
+const isLetterActor = (actor: AnimalActor) => isLetterDefinition(actor.definition);
 
 const getBounds = () => {
   const rect = gameLayer?.getBoundingClientRect();
@@ -102,6 +110,9 @@ const hasEnoughSpace = (x: number, y: number, width: number, height: number) =>
   });
 
 const chooseY = (definition: AnimalDefinition, height: number, groundY: number) => {
+  if (isLetterDefinition(definition)) {
+    return randomBetween(height * 0.14, height * 0.88);
+  }
   if (definition.movementType === 'fly') {
     return randomBetween(height * 0.18, height * 0.62);
   }
@@ -175,7 +186,7 @@ const createActor = (definition: AnimalDefinition): AnimalActor => {
     x,
     y,
     vx: speed * direction,
-    vy: definition.movementType === 'fly' ? randomBetween(-10, 10) : 0,
+    vy: definition.movementType === 'fly' ? randomBetween(isLetterDefinition(definition) ? -30 : -10, isLetterDefinition(definition) ? 30 : 10) : 0,
     phase: randomBetween(0, Math.PI * 2),
     nextHopAt: randomBetween(0.4, 1.5),
     size
@@ -208,14 +219,17 @@ const maintainPopulation = () => {
 
 const updateActor = (actor: AnimalActor, deltaSeconds: number, elapsedSeconds: number) => {
   const bounds = getBounds();
+  const isLetter = isLetterActor(actor);
 
   if (actor.definition.movementType === 'fly') {
     actor.phase += deltaSeconds * 1.5;
     actor.x += actor.vx * deltaSeconds;
-    actor.y += (actor.vy + Math.sin(actor.phase) * 18) * deltaSeconds;
-    if (actor.y < bounds.height * 0.18 || actor.y > bounds.height * 0.66) {
+    actor.y += (actor.vy + Math.sin(actor.phase) * (isLetter ? 24 : 18)) * deltaSeconds;
+    const minY = isLetter ? bounds.height * 0.12 : bounds.height * 0.18;
+    const maxY = isLetter ? bounds.height * 0.9 : bounds.height * 0.66;
+    if (actor.y < minY || actor.y > maxY) {
       actor.vy *= -1;
-      actor.y = clamp(actor.y, bounds.height * 0.18, bounds.height * 0.66);
+      actor.y = clamp(actor.y, minY, maxY);
     }
   } else if (actor.definition.movementType === 'hop') {
     if (elapsedSeconds >= actor.nextHopAt) {
@@ -243,9 +257,7 @@ const updateActor = (actor: AnimalActor, deltaSeconds: number, elapsedSeconds: n
     actor.vx *= -1;
   }
 
-  const tilt = actor.definition.movementType === 'fly' ? Math.sin(actor.phase) * 5 : Math.sin(actor.phase) * 2;
-  const flip = actor.definition.displayText ? 1 : actor.vx < 0 ? -1 : 1;
-  actor.element.style.transform = `translate3d(${actor.x - actor.width / 2}px, ${actor.y - actor.height / 2}px, 0) rotate(${tilt}deg) scaleX(${flip})`;
+  applyActorTransform(actor);
 
   if (actor.definition.animation) {
     actor.animElapsed += deltaSeconds;
@@ -253,6 +265,67 @@ const updateActor = (actor: AnimalActor, deltaSeconds: number, elapsedSeconds: n
     if (nextFrame !== actor.currentFrame) {
       actor.currentFrame = nextFrame;
       applySpriteFrame(actor);
+    }
+  }
+};
+
+const resolveLetterCollisions = () => {
+  if (currentMode !== 'letters' || actors.length < 2) {
+    return;
+  }
+
+  for (let index = 0; index < actors.length; index += 1) {
+    const actorA = actors[index];
+    if (!isLetterActor(actorA)) {
+      continue;
+    }
+
+    for (let nextIndex = index + 1; nextIndex < actors.length; nextIndex += 1) {
+      const actorB = actors[nextIndex];
+      if (!isLetterActor(actorB)) {
+        continue;
+      }
+
+      const dx = actorB.x - actorA.x;
+      const dy = actorB.y - actorA.y;
+      const distance = Math.hypot(dx, dy) || 0.001;
+      const minimumDistance = (actorA.footprint + actorB.footprint) * 0.42;
+      if (distance >= minimumDistance) {
+        continue;
+      }
+
+      const nx = dx / distance;
+      const ny = dy / distance;
+      const overlap = minimumDistance - distance;
+
+      actorA.x -= nx * overlap * 0.5;
+      actorA.y -= ny * overlap * 0.5;
+      actorB.x += nx * overlap * 0.5;
+      actorB.y += ny * overlap * 0.5;
+
+      const relativeVelocityX = actorB.vx - actorA.vx;
+      const relativeVelocityY = actorB.vy - actorA.vy;
+      const speedAlongNormal = relativeVelocityX * nx + relativeVelocityY * ny;
+      if (speedAlongNormal >= 0) {
+        continue;
+      }
+
+      const impulse = -speedAlongNormal * 0.92;
+      actorA.vx -= nx * impulse;
+      actorA.vy -= ny * impulse;
+      actorB.vx += nx * impulse;
+      actorB.vy += ny * impulse;
+
+      actorA.vx = clamp(actorA.vx, -72, 72);
+      actorA.vy = clamp(actorA.vy, -56, 56);
+      actorB.vx = clamp(actorB.vx, -72, 72);
+      actorB.vy = clamp(actorB.vy, -56, 56);
+    }
+  }
+
+  for (const actor of actors) {
+    if (isLetterActor(actor)) {
+      applyActorTransform(actor);
     }
   }
 };
@@ -269,6 +342,8 @@ const tick = (time: number) => {
   for (const actor of actors) {
     updateActor(actor, deltaSeconds, time / 1000);
   }
+
+  resolveLetterCollisions();
 
   Object.assign(window, {
     __babyBugGameState: {

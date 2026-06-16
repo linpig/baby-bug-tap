@@ -429,11 +429,9 @@ export const ANIMALS: AnimalDefinition[] = [
 export type GameMode = 'animals' | 'letters' | 'numbers';
 
 const LETTER_PALETTES = ['berry', 'sky', 'mint', 'sun', 'peach', 'violet'] as const;
-const NUMBER_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'] as const;
 const NUMBER_WORDS_ZH = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'] as const;
 
 export const LETTERS: AnimalDefinition[] = Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ').map((letter, index) => {
-  const movementType: MovementType = index % 3 === 0 ? 'fly' : index % 3 === 1 ? 'hop' : 'crawl';
   return {
     id: `letter-${letter.toLowerCase()}`,
     nameZh: letter,
@@ -441,16 +439,15 @@ export const LETTERS: AnimalDefinition[] = Array.from('ABCDEFGHIJKLMNOPQRSTUVWXY
     speechLang: 'en-US',
     speechText: letter,
     spriteKey: `letter-${letter.toLowerCase()}`,
-    audioKey: '',
+    audioKey: `voice-letter-${letter.toLowerCase()}`,
     textStyle: LETTER_PALETTES[index % LETTER_PALETTES.length],
-    movementType,
-    size: movementType === 'fly' ? 94 : 88,
-    speedRange:
-      movementType === 'fly' ? [28, 42] : movementType === 'hop' ? [22, 34] : [14, 26]
+    movementType: 'fly',
+    size: 92,
+    speedRange: [34, 52]
   };
 });
 
-export const NUMBERS: AnimalDefinition[] = NUMBER_WORDS.map((word, index) => {
+export const NUMBERS: AnimalDefinition[] = NUMBER_WORDS_ZH.map((word, index) => {
   const movementType: MovementType = index % 3 === 0 ? 'hop' : index % 2 === 0 ? 'crawl' : 'fly';
   return {
     id: `number-${index}`,
@@ -481,7 +478,7 @@ export const MODE_LABELS: Record<GameMode, { title: string; subtitle: string }> 
   },
   letters: {
     title: '英文字母',
-    subtitle: '點點看會念出英文 A 到 Z'
+    subtitle: '點點看會念出英文 A 到 Z，共 26 個字母'
   },
   numbers: {
     title: '數字',

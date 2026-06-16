@@ -4,38 +4,44 @@ import path from 'node:path';
 const cwd = process.cwd();
 const envPath = path.join(cwd, '.env.local');
 const outputDir = path.join(cwd, 'public', 'assets', 'audio', 'voice');
+const letters = Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
 
 const voiceLines = [
-  { id: 'butterfly', text: '蝴蝶' },
-  { id: 'ladybug', text: '瓢蟲' },
-  { id: 'bee', text: '蜜蜂' },
-  { id: 'ant', text: '螞蟻' },
-  { id: 'caterpillar', text: '毛毛蟲' },
-  { id: 'snail', text: '蝸牛' },
-  { id: 'frog', text: '青蛙' },
-  { id: 'bird', text: '小鳥' },
-  { id: 'dragonfly', text: '蜻蜓' },
-  { id: 'beetle', text: '甲蟲' },
-  { id: 'grasshopper', text: '蚱蜢' },
-  { id: 'firefly', text: '螢火蟲' },
-  { id: 'duck', text: '小鴨' },
-  { id: 'rabbit', text: '兔子' },
-  { id: 'cat', text: '小貓' },
-  { id: 'dog', text: '小狗' },
-  { id: 'turtle', text: '烏龜' },
-  { id: 'chick', text: '小雞' },
-  { id: 'owl', text: '貓頭鷹' },
-  { id: 'squirrel', text: '松鼠' },
-  { id: 'number-0', text: '零' },
-  { id: 'number-1', text: '一' },
-  { id: 'number-2', text: '二' },
-  { id: 'number-3', text: '三' },
-  { id: 'number-4', text: '四' },
-  { id: 'number-5', text: '五' },
-  { id: 'number-6', text: '六' },
-  { id: 'number-7', text: '七' },
-  { id: 'number-8', text: '八' },
-  { id: 'number-9', text: '九' }
+  { id: 'butterfly', text: '蝴蝶', languageCode: 'zh' },
+  { id: 'ladybug', text: '瓢蟲', languageCode: 'zh' },
+  { id: 'bee', text: '蜜蜂', languageCode: 'zh' },
+  { id: 'ant', text: '螞蟻', languageCode: 'zh' },
+  { id: 'caterpillar', text: '毛毛蟲', languageCode: 'zh' },
+  { id: 'snail', text: '蝸牛', languageCode: 'zh' },
+  { id: 'frog', text: '青蛙', languageCode: 'zh' },
+  { id: 'bird', text: '小鳥', languageCode: 'zh' },
+  { id: 'dragonfly', text: '蜻蜓', languageCode: 'zh' },
+  { id: 'beetle', text: '甲蟲', languageCode: 'zh' },
+  { id: 'grasshopper', text: '蚱蜢', languageCode: 'zh' },
+  { id: 'firefly', text: '螢火蟲', languageCode: 'zh' },
+  { id: 'duck', text: '小鴨', languageCode: 'zh' },
+  { id: 'rabbit', text: '兔子', languageCode: 'zh' },
+  { id: 'cat', text: '小貓', languageCode: 'zh' },
+  { id: 'dog', text: '小狗', languageCode: 'zh' },
+  { id: 'turtle', text: '烏龜', languageCode: 'zh' },
+  { id: 'chick', text: '小雞', languageCode: 'zh' },
+  { id: 'owl', text: '貓頭鷹', languageCode: 'zh' },
+  { id: 'squirrel', text: '松鼠', languageCode: 'zh' },
+  { id: 'number-0', text: '零', languageCode: 'zh' },
+  { id: 'number-1', text: '一', languageCode: 'zh' },
+  { id: 'number-2', text: '二', languageCode: 'zh' },
+  { id: 'number-3', text: '三', languageCode: 'zh' },
+  { id: 'number-4', text: '四', languageCode: 'zh' },
+  { id: 'number-5', text: '五', languageCode: 'zh' },
+  { id: 'number-6', text: '六', languageCode: 'zh' },
+  { id: 'number-7', text: '七', languageCode: 'zh' },
+  { id: 'number-8', text: '八', languageCode: 'zh' },
+  { id: 'number-9', text: '九', languageCode: 'zh' },
+  ...letters.map((letter) => ({
+    id: `letter-${letter.toLowerCase()}`,
+    text: letter,
+    languageCode: 'en'
+  }))
 ];
 
 const parseEnvFile = async () => {
@@ -84,7 +90,7 @@ for (const line of voiceLines) {
     body: JSON.stringify({
       text: line.text,
       model_id: modelId,
-      language_code: 'zh'
+      language_code: line.languageCode
     })
   });
 
