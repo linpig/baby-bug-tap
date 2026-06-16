@@ -1,9 +1,21 @@
-import { ANIMALS } from '../content/animals';
+import { MODE_ITEMS } from '../content/animals';
 
-export const VOICE_ASSETS = ANIMALS.map((animal) => ({
-  key: animal.audioKey,
-  path: `assets/audio/voice/${animal.id}.mp3`
-}));
+const allItems = Object.values(MODE_ITEMS).flat();
+const voicedItems = allItems.filter((item) => item.audioKey);
+const seenVoiceKeys = new Set<string>();
+
+export const VOICE_ASSETS = voicedItems
+  .filter((item) => {
+    if (seenVoiceKeys.has(item.audioKey)) {
+      return false;
+    }
+    seenVoiceKeys.add(item.audioKey);
+    return true;
+  })
+  .map((item) => ({
+    key: item.audioKey,
+    path: `assets/audio/voice/${item.id}.mp3`
+  }));
 
 export const FX_ASSETS = [
   {

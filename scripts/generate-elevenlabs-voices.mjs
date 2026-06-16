@@ -25,7 +25,17 @@ const voiceLines = [
   { id: 'turtle', text: '烏龜' },
   { id: 'chick', text: '小雞' },
   { id: 'owl', text: '貓頭鷹' },
-  { id: 'squirrel', text: '松鼠' }
+  { id: 'squirrel', text: '松鼠' },
+  { id: 'number-0', text: '零' },
+  { id: 'number-1', text: '一' },
+  { id: 'number-2', text: '二' },
+  { id: 'number-3', text: '三' },
+  { id: 'number-4', text: '四' },
+  { id: 'number-5', text: '五' },
+  { id: 'number-6', text: '六' },
+  { id: 'number-7', text: '七' },
+  { id: 'number-8', text: '八' },
+  { id: 'number-9', text: '九' }
 ];
 
 const parseEnvFile = async () => {

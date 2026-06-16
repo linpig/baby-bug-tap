@@ -430,6 +430,7 @@ export type GameMode = 'animals' | 'letters' | 'numbers';
 
 const LETTER_PALETTES = ['berry', 'sky', 'mint', 'sun', 'peach', 'violet'] as const;
 const NUMBER_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'] as const;
+const NUMBER_WORDS_ZH = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'] as const;
 
 export const LETTERS: AnimalDefinition[] = Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ').map((letter, index) => {
   const movementType: MovementType = index % 3 === 0 ? 'fly' : index % 3 === 1 ? 'hop' : 'crawl';
@@ -455,10 +456,10 @@ export const NUMBERS: AnimalDefinition[] = NUMBER_WORDS.map((word, index) => {
     id: `number-${index}`,
     nameZh: String(index),
     displayText: String(index),
-    speechLang: 'en-US',
-    speechText: word,
+    speechLang: 'zh-TW',
+    speechText: NUMBER_WORDS_ZH[index],
     spriteKey: `number-${index}`,
-    audioKey: '',
+    audioKey: `voice-number-${index}`,
     textStyle: LETTER_PALETTES[index % LETTER_PALETTES.length],
     movementType,
     size: movementType === 'fly' ? 94 : 90,
@@ -484,6 +485,6 @@ export const MODE_LABELS: Record<GameMode, { title: string; subtitle: string }> 
   },
   numbers: {
     title: '數字',
-    subtitle: '點點看會念出英文數字 0 到 9'
+    subtitle: '點點看會念出中文數字 0 到 9'
   }
 };
