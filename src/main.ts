@@ -244,7 +244,7 @@ const updateActor = (actor: AnimalActor, deltaSeconds: number, elapsedSeconds: n
   }
 
   const tilt = actor.definition.movementType === 'fly' ? Math.sin(actor.phase) * 5 : Math.sin(actor.phase) * 2;
-  const flip = actor.vx < 0 ? -1 : 1;
+  const flip = actor.definition.displayText ? 1 : actor.vx < 0 ? -1 : 1;
   actor.element.style.transform = `translate3d(${actor.x - actor.width / 2}px, ${actor.y - actor.height / 2}px, 0) rotate(${tilt}deg) scaleX(${flip})`;
 
   if (actor.definition.animation) {
