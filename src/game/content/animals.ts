@@ -12,6 +12,10 @@ export interface AnimalDefinition {
   animation?: SpriteAnimation;
   id: string;
   nameZh: string;
+  renderScale?: {
+    x?: number;
+    y?: number;
+  };
   spriteKey: string;
   audioKey: string;
   movementType: MovementType;
@@ -91,6 +95,10 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-caterpillar',
     movementType: 'crawl',
     size: 94,
+    renderScale: {
+      x: 1.46,
+      y: 0.82
+    },
     speedRange: [14, 24],
     animation: {
       frameOffsetsY: [0, -1, 0, -1],

@@ -9,7 +9,10 @@ interface AnimalActor {
   id: string;
   definition: AnimalDefinition;
   element: HTMLButtonElement;
+  footprint: number;
+  height: number;
   visual: HTMLElement;
+  width: number;
   x: number;
   y: number;
   vx: number;
@@ -80,10 +83,10 @@ const chooseAnimal = () => {
   return pool[Math.floor(Math.random() * pool.length)];
 };
 
-const hasEnoughSpace = (x: number, y: number, size: number) =>
+const hasEnoughSpace = (x: number, y: number, footprint: number) =>
   actors.every((actor) => {
     const distance = Math.hypot(actor.x - x, actor.y - y);
-    return distance > (actor.size + size) * 0.48;
+    return distance > (actor.footprint + footprint) * 0.48;
   });
 
 const chooseY = (definition: AnimalDefinition, height: number, groundY: number) => {
@@ -99,6 +102,9 @@ const chooseY = (definition: AnimalDefinition, height: number, groundY: number) 
 const createActor = (definition: AnimalDefinition): AnimalActor => {
   const bounds = getBounds();
   const size = definition.size;
+  const width = Math.round(size * (definition.renderScale?.x ?? 1));
+  const height = Math.round(size * (definition.renderScale?.y ?? 1));
+  const footprint = Math.max(width, height);
   const speed = randomBetween(definition.speedRange[0], definition.speedRange[1]);
   const direction = Math.random() > 0.5 ? 1 : -1;
   const element = document.createElement('button');
@@ -108,8 +114,8 @@ const createActor = (definition: AnimalDefinition): AnimalActor => {
   element.type = 'button';
   element.draggable = false;
   element.setAttribute('aria-label', definition.nameZh);
-  element.style.width = `${size}px`;
-  element.style.height = `${size}px`;
+  element.style.width = `${width}px`;
+  element.style.height = `${height}px`;
 
   if (definition.animation) {
     const sprite = document.createElement('span');
@@ -131,10 +137,10 @@ const createActor = (definition: AnimalDefinition): AnimalActor => {
   element.append(visual);
   gameLayer?.append(element);
 
-  let x = randomBetween(size * 0.55, bounds.width - size * 0.55);
+  let x = randomBetween(width * 0.55, bounds.width - width * 0.55);
   let y = chooseY(definition, bounds.height, bounds.groundY);
-  for (let attempt = 0; attempt < 24 && !hasEnoughSpace(x, y, size); attempt += 1) {
-    x = randomBetween(size * 0.55, bounds.width - size * 0.55);
+  for (let attempt = 0; attempt < 24 && !hasEnoughSpace(x, y, footprint); attempt += 1) {
+    x = randomBetween(width * 0.55, bounds.width - width * 0.55);
     y = chooseY(definition, bounds.height, bounds.groundY);
   }
 
@@ -144,7 +150,10 @@ const createActor = (definition: AnimalDefinition): AnimalActor => {
     id: `${definition.id}-${crypto.randomUUID()}`,
     definition,
     element,
+    footprint,
+    height,
     visual,
+    width,
     x,
     y,
     vx: speed * direction,
@@ -206,7 +215,7 @@ const updateActor = (actor: AnimalActor, deltaSeconds: number, elapsedSeconds: n
     actor.y = clamp(actor.y, bounds.groundY - 120, bounds.groundY + 8);
   }
 
-  const edgePadding = actor.size * 0.5 + 16;
+  const edgePadding = actor.width * 0.5 + 16;
   if (actor.x < edgePadding || actor.x > bounds.width - edgePadding) {
     actor.x = clamp(actor.x, edgePadding, bounds.width - edgePadding);
     actor.vx *= -1;
@@ -214,7 +223,7 @@ const updateActor = (actor: AnimalActor, deltaSeconds: number, elapsedSeconds: n
 
   const tilt = actor.definition.movementType === 'fly' ? Math.sin(actor.phase) * 5 : Math.sin(actor.phase) * 2;
   const flip = actor.vx < 0 ? -1 : 1;
-  actor.element.style.transform = `translate3d(${actor.x - actor.size / 2}px, ${actor.y - actor.size / 2}px, 0) rotate(${tilt}deg) scaleX(${flip})`;
+  actor.element.style.transform = `translate3d(${actor.x - actor.width / 2}px, ${actor.y - actor.height / 2}px, 0) rotate(${tilt}deg) scaleX(${flip})`;
 
   if (actor.definition.animation) {
     actor.animElapsed += deltaSeconds;
