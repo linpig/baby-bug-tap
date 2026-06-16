@@ -58,7 +58,7 @@ const actors: AnimalActor[] = [];
 const TARGET_VISIBLE_BY_MODE: Record<GameMode, number> = {
   animals: 20,
   letters: 26,
-  numbers: 14
+  numbers: 10
 };
 let muted = false;
 let running = false;
@@ -212,7 +212,10 @@ const maintainPopulation = () => {
     return;
   }
 
-  while (actors.length < TARGET_VISIBLE_BY_MODE[currentMode]) {
+  const definitions = getCurrentDefinitions();
+  const targetCount = Math.min(TARGET_VISIBLE_BY_MODE[currentMode], definitions.length);
+
+  while (actors.length < targetCount) {
     actors.push(createActor(chooseItem()));
   }
 };
