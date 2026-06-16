@@ -1,5 +1,5 @@
 .env.local
 node_modules
 dist
-assets/audio/voice/*.m4a
-assets/audio/voice/*.aiff
+public/assets/audio/voice/*.m4a
+public/assets/audio/voice/*.aiff

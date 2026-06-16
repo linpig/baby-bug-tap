@@ -3,7 +3,7 @@ import path from 'node:path';
 
 const cwd = process.cwd();
 const envPath = path.join(cwd, '.env.local');
-const outputDir = path.join(cwd, 'assets', 'audio', 'voice');
+const outputDir = path.join(cwd, 'public', 'assets', 'audio', 'voice');
 
 const voiceLines = [
   { id: 'butterfly', text: '蝴蝶' },
@@ -87,5 +87,5 @@ for (const line of voiceLines) {
 
   const audioBuffer = Buffer.from(await response.arrayBuffer());
   await writeFile(path.join(outputDir, `${line.id}.mp3`), audioBuffer);
-  console.log(`Generated assets/audio/voice/${line.id}.mp3`);
+  console.log(`Generated public/assets/audio/voice/${line.id}.mp3`);
 }
