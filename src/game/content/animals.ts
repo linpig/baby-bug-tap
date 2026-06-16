@@ -12,11 +12,15 @@ export interface AnimalDefinition {
   animation?: SpriteAnimation;
   id: string;
   nameZh: string;
+  displayText?: string;
+  speechLang?: string;
+  speechText?: string;
   renderScale?: {
     x?: number;
     y?: number;
   };
   spriteKey: string;
+  textStyle?: string;
   audioKey: string;
   movementType: MovementType;
   size: number;
@@ -27,6 +31,8 @@ export const ANIMALS: AnimalDefinition[] = [
   {
     id: 'butterfly',
     nameZh: '蝴蝶',
+    speechLang: 'zh-TW',
+    speechText: '蝴蝶',
     spriteKey: 'animal-butterfly',
     audioKey: 'voice-butterfly',
     movementType: 'fly',
@@ -43,6 +49,8 @@ export const ANIMALS: AnimalDefinition[] = [
   {
     id: 'ladybug',
     nameZh: '瓢蟲',
+    speechLang: 'zh-TW',
+    speechText: '瓢蟲',
     spriteKey: 'animal-ladybug',
     audioKey: 'voice-ladybug',
     movementType: 'crawl',
@@ -59,6 +67,8 @@ export const ANIMALS: AnimalDefinition[] = [
   {
     id: 'bee',
     nameZh: '蜜蜂',
+    speechLang: 'zh-TW',
+    speechText: '蜜蜂',
     spriteKey: 'animal-bee',
     audioKey: 'voice-bee',
     movementType: 'fly',
@@ -75,6 +85,8 @@ export const ANIMALS: AnimalDefinition[] = [
   {
     id: 'ant',
     nameZh: '螞蟻',
+    speechLang: 'zh-TW',
+    speechText: '螞蟻',
     spriteKey: 'animal-ant',
     audioKey: 'voice-ant',
     movementType: 'crawl',
@@ -91,6 +103,8 @@ export const ANIMALS: AnimalDefinition[] = [
   {
     id: 'caterpillar',
     nameZh: '毛毛蟲',
+    speechLang: 'zh-TW',
+    speechText: '毛毛蟲',
     spriteKey: 'animal-caterpillar',
     audioKey: 'voice-caterpillar',
     movementType: 'crawl',
@@ -111,6 +125,8 @@ export const ANIMALS: AnimalDefinition[] = [
   {
     id: 'snail',
     nameZh: '蝸牛',
+    speechLang: 'zh-TW',
+    speechText: '蝸牛',
     spriteKey: 'animal-snail',
     audioKey: 'voice-snail',
     movementType: 'crawl',
@@ -131,6 +147,8 @@ export const ANIMALS: AnimalDefinition[] = [
   {
     id: 'frog',
     nameZh: '青蛙',
+    speechLang: 'zh-TW',
+    speechText: '青蛙',
     spriteKey: 'animal-frog',
     audioKey: 'voice-frog',
     movementType: 'hop',
@@ -147,6 +165,8 @@ export const ANIMALS: AnimalDefinition[] = [
   {
     id: 'bird',
     nameZh: '小鳥',
+    speechLang: 'zh-TW',
+    speechText: '小鳥',
     spriteKey: 'animal-bird',
     audioKey: 'voice-bird',
     movementType: 'fly',
@@ -163,6 +183,8 @@ export const ANIMALS: AnimalDefinition[] = [
   {
     id: 'dragonfly',
     nameZh: '蜻蜓',
+    speechLang: 'zh-TW',
+    speechText: '蜻蜓',
     spriteKey: 'animal-dragonfly',
     audioKey: 'voice-dragonfly',
     movementType: 'fly',
@@ -179,6 +201,8 @@ export const ANIMALS: AnimalDefinition[] = [
   {
     id: 'beetle',
     nameZh: '甲蟲',
+    speechLang: 'zh-TW',
+    speechText: '甲蟲',
     spriteKey: 'animal-beetle',
     audioKey: 'voice-beetle',
     movementType: 'crawl',
@@ -195,6 +219,8 @@ export const ANIMALS: AnimalDefinition[] = [
   {
     id: 'grasshopper',
     nameZh: '蚱蜢',
+    speechLang: 'zh-TW',
+    speechText: '蚱蜢',
     spriteKey: 'animal-grasshopper',
     audioKey: 'voice-grasshopper',
     movementType: 'hop',
@@ -215,6 +241,8 @@ export const ANIMALS: AnimalDefinition[] = [
   {
     id: 'firefly',
     nameZh: '螢火蟲',
+    speechLang: 'zh-TW',
+    speechText: '螢火蟲',
     spriteKey: 'animal-firefly',
     audioKey: 'voice-firefly',
     movementType: 'fly',
@@ -231,6 +259,8 @@ export const ANIMALS: AnimalDefinition[] = [
   {
     id: 'duck',
     nameZh: '小鴨',
+    speechLang: 'zh-TW',
+    speechText: '小鴨',
     spriteKey: 'animal-duck',
     audioKey: 'voice-duck',
     movementType: 'hop',
@@ -251,6 +281,8 @@ export const ANIMALS: AnimalDefinition[] = [
   {
     id: 'rabbit',
     nameZh: '兔子',
+    speechLang: 'zh-TW',
+    speechText: '兔子',
     spriteKey: 'animal-rabbit',
     audioKey: 'voice-rabbit',
     movementType: 'hop',
@@ -267,6 +299,8 @@ export const ANIMALS: AnimalDefinition[] = [
   {
     id: 'cat',
     nameZh: '小貓',
+    speechLang: 'zh-TW',
+    speechText: '小貓',
     spriteKey: 'animal-cat',
     audioKey: 'voice-cat',
     movementType: 'crawl',
@@ -287,6 +321,8 @@ export const ANIMALS: AnimalDefinition[] = [
   {
     id: 'dog',
     nameZh: '小狗',
+    speechLang: 'zh-TW',
+    speechText: '小狗',
     spriteKey: 'animal-dog',
     audioKey: 'voice-dog',
     movementType: 'crawl',
@@ -307,6 +343,8 @@ export const ANIMALS: AnimalDefinition[] = [
   {
     id: 'turtle',
     nameZh: '烏龜',
+    speechLang: 'zh-TW',
+    speechText: '烏龜',
     spriteKey: 'animal-turtle',
     audioKey: 'voice-turtle',
     movementType: 'crawl',
@@ -327,6 +365,8 @@ export const ANIMALS: AnimalDefinition[] = [
   {
     id: 'chick',
     nameZh: '小雞',
+    speechLang: 'zh-TW',
+    speechText: '小雞',
     spriteKey: 'animal-chick',
     audioKey: 'voice-chick',
     movementType: 'hop',
@@ -343,6 +383,8 @@ export const ANIMALS: AnimalDefinition[] = [
   {
     id: 'owl',
     nameZh: '貓頭鷹',
+    speechLang: 'zh-TW',
+    speechText: '貓頭鷹',
     spriteKey: 'animal-owl',
     audioKey: 'voice-owl',
     movementType: 'fly',
@@ -363,6 +405,8 @@ export const ANIMALS: AnimalDefinition[] = [
   {
     id: 'squirrel',
     nameZh: '松鼠',
+    speechLang: 'zh-TW',
+    speechText: '松鼠',
     spriteKey: 'animal-squirrel',
     audioKey: 'voice-squirrel',
     movementType: 'hop',
@@ -381,3 +425,65 @@ export const ANIMALS: AnimalDefinition[] = [
     }
   }
 ];
+
+export type GameMode = 'animals' | 'letters' | 'numbers';
+
+const LETTER_PALETTES = ['berry', 'sky', 'mint', 'sun', 'peach', 'violet'] as const;
+const NUMBER_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'] as const;
+
+export const LETTERS: AnimalDefinition[] = Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ').map((letter, index) => {
+  const movementType: MovementType = index % 3 === 0 ? 'fly' : index % 3 === 1 ? 'hop' : 'crawl';
+  return {
+    id: `letter-${letter.toLowerCase()}`,
+    nameZh: letter,
+    displayText: letter,
+    speechLang: 'en-US',
+    speechText: letter,
+    spriteKey: `letter-${letter.toLowerCase()}`,
+    audioKey: '',
+    textStyle: LETTER_PALETTES[index % LETTER_PALETTES.length],
+    movementType,
+    size: movementType === 'fly' ? 94 : 88,
+    speedRange:
+      movementType === 'fly' ? [28, 42] : movementType === 'hop' ? [22, 34] : [14, 26]
+  };
+});
+
+export const NUMBERS: AnimalDefinition[] = NUMBER_WORDS.map((word, index) => {
+  const movementType: MovementType = index % 3 === 0 ? 'hop' : index % 2 === 0 ? 'crawl' : 'fly';
+  return {
+    id: `number-${index}`,
+    nameZh: String(index),
+    displayText: String(index),
+    speechLang: 'en-US',
+    speechText: word,
+    spriteKey: `number-${index}`,
+    audioKey: '',
+    textStyle: LETTER_PALETTES[index % LETTER_PALETTES.length],
+    movementType,
+    size: movementType === 'fly' ? 94 : 90,
+    speedRange:
+      movementType === 'fly' ? [26, 40] : movementType === 'hop' ? [22, 34] : [14, 24]
+  };
+});
+
+export const MODE_ITEMS: Record<GameMode, AnimalDefinition[]> = {
+  animals: ANIMALS,
+  letters: LETTERS,
+  numbers: NUMBERS
+};
+
+export const MODE_LABELS: Record<GameMode, { title: string; subtitle: string }> = {
+  animals: {
+    title: '昆蟲動物',
+    subtitle: '點點看會說出動物或昆蟲名稱'
+  },
+  letters: {
+    title: '英文字母',
+    subtitle: '點點看會念出英文 A 到 Z'
+  },
+  numbers: {
+    title: '數字',
+    subtitle: '點點看會念出英文數字 0 到 9'
+  }
+};

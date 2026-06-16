@@ -1,6 +1,6 @@
 import { FX_ASSETS, VOICE_ASSETS } from './game/assets/manifest';
-import { ANIMALS } from './game/content/animals';
-import type { AnimalDefinition } from './game/content/animals';
+import { MODE_ITEMS, MODE_LABELS } from './game/content/animals';
+import type { AnimalDefinition, GameMode } from './game/content/animals';
 import './styles.css';
 
 interface AnimalActor {
@@ -39,6 +39,9 @@ const applySpriteFrame = (actor: AnimalActor) => {
 const shell = document.querySelector<HTMLElement>('#game-shell');
 const gameLayer = document.querySelector<HTMLElement>('#game-container');
 const soundToggle = document.querySelector<HTMLButtonElement>('#sound-toggle');
+const homeButton = document.querySelector<HTMLButtonElement>('#home-button');
+const modePanel = document.querySelector<HTMLElement>('#mode-panel');
+const modeButtons = Array.from(document.querySelectorAll<HTMLButtonElement>('.mode-option'));
 const startButton = document.querySelector<HTMLButtonElement>('#start-button');
 
 document.addEventListener('dragstart', (event) => {
@@ -46,7 +49,11 @@ document.addEventListener('dragstart', (event) => {
 });
 
 const actors: AnimalActor[] = [];
-const TARGET_VISIBLE_ACTORS = 20;
+const TARGET_VISIBLE_BY_MODE: Record<GameMode, number> = {
+  animals: 20,
+  letters: 18,
+  numbers: 14
+};
 let muted = false;
 let running = false;
 let lastTime = 0;
@@ -59,6 +66,7 @@ let preferredSpeechVoice: SpeechSynthesisVoice | null = null;
 let pendingSpeechTimeout: number | null = null;
 const voicePlayers = new Map<string, HTMLAudioElement>();
 const voiceReady = new Set<string>();
+let currentMode: GameMode | null = null;
 
 const randomBetween = (min: number, max: number) => min + Math.random() * (max - min);
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
@@ -76,10 +84,13 @@ const getBounds = () => {
   };
 };
 
-const chooseAnimal = () => {
+const getCurrentDefinitions = () => (currentMode ? MODE_ITEMS[currentMode] : []);
+
+const chooseItem = () => {
+  const definitions = getCurrentDefinitions();
   const usedIds = new Set(actors.map((actor) => actor.definition.id));
-  const candidates = ANIMALS.filter((animal) => !usedIds.has(animal.id));
-  const pool = candidates.length > 0 ? candidates : ANIMALS;
+  const candidates = definitions.filter((animal) => !usedIds.has(animal.id));
+  const pool = candidates.length > 0 ? candidates : definitions;
   return pool[Math.floor(Math.random() * pool.length)];
 };
 
@@ -124,6 +135,12 @@ const createActor = (definition: AnimalDefinition): AnimalActor => {
     sprite.style.setProperty('--frames', String(definition.animation.frames));
     sprite.style.setProperty('--sprite-url', `url("${resolveAssetUrl(definition.animation.path)}")`);
     visual = sprite;
+  } else if (definition.displayText) {
+    const text = document.createElement('span');
+    text.className = 'animal-text';
+    text.textContent = definition.displayText;
+    text.dataset.style = definition.textStyle || 'sky';
+    visual = text;
   } else {
     const image = document.createElement('img');
     image.alt = definition.nameZh;
@@ -180,8 +197,12 @@ const createActor = (definition: AnimalDefinition): AnimalActor => {
 };
 
 const maintainPopulation = () => {
-  while (actors.length < TARGET_VISIBLE_ACTORS) {
-    actors.push(createActor(chooseAnimal()));
+  if (!currentMode) {
+    return;
+  }
+
+  while (actors.length < TARGET_VISIBLE_BY_MODE[currentMode]) {
+    actors.push(createActor(chooseItem()));
   }
 };
 
@@ -267,7 +288,7 @@ const createAudioElement = (path: string) => {
   return audio;
 };
 
-const pickPreferredSpeechVoice = () => {
+const pickPreferredSpeechVoice = (lang: string) => {
   if (!speechReady) {
     return null;
   }
@@ -277,24 +298,21 @@ const pickPreferredSpeechVoice = () => {
     return null;
   }
 
-  const preferredNames = ['Meijia', 'Flo', 'Eddy', 'Sandy'];
+  const normalizedLang = lang.toLowerCase();
+  const preferredNames = normalizedLang.startsWith('en') ? ['Samantha', 'Alex', 'Daniel'] : ['Meijia', 'Flo', 'Eddy', 'Sandy'];
 
   for (const preferredName of preferredNames) {
-    const match = voices.find((voice) => voice.lang.toLowerCase().startsWith('zh') && voice.name.includes(preferredName));
+    const match = voices.find(
+      (voice) => voice.lang.toLowerCase().startsWith(normalizedLang.slice(0, 2)) && voice.name.includes(preferredName)
+    );
     if (match) {
       return match;
     }
   }
 
-  return (
-    voices.find((voice) => voice.lang.toLowerCase().startsWith('zh-tw')) ||
-    voices.find((voice) => voice.lang.toLowerCase().startsWith('zh')) ||
-    null
-  );
-};
-
-const refreshPreferredSpeechVoice = () => {
-  preferredSpeechVoice = pickPreferredSpeechVoice();
+  return voices.find((voice) => voice.lang.toLowerCase().startsWith(normalizedLang)) ||
+    voices.find((voice) => voice.lang.toLowerCase().startsWith(normalizedLang.slice(0, 2))) ||
+    null;
 };
 
 const primeAudioElement = async (audio: HTMLAudioElement) => {
@@ -363,10 +381,10 @@ const unlockAudio = async () => {
   audioUnlocked = true;
 };
 
-const playVoiceName = (audioKey: string, fallbackName: string) => {
+const playVoiceName = (audioKey: string, fallbackText: string, speechLang = 'zh-TW') => {
   const voice = voicePlayers.get(audioKey);
   if (!voice || !voiceReady.has(audioKey)) {
-    speakName(fallbackName);
+    speakText(fallbackText, speechLang);
     return;
   }
 
@@ -381,29 +399,26 @@ const playVoiceName = (audioKey: string, fallbackName: string) => {
   currentVoiceAudio.currentTime = 0;
   currentVoiceAudio.volume = 1;
   void currentVoiceAudio.play().catch(() => {
-    speakName(fallbackName);
+    speakText(fallbackText, speechLang);
   });
 };
 
-const speakName = (nameZh: string) => {
+const speakText = (text: string, lang = 'zh-TW') => {
   if (!speechReady || muted) {
     return;
   }
 
-  if (!preferredSpeechVoice) {
-    refreshPreferredSpeechVoice();
-  }
-
+  preferredSpeechVoice = pickPreferredSpeechVoice(lang);
   window.speechSynthesis.cancel();
   if (pendingSpeechTimeout !== null) {
     window.clearTimeout(pendingSpeechTimeout);
     pendingSpeechTimeout = null;
   }
-  const utterance = new SpeechSynthesisUtterance(nameZh);
-  utterance.lang = preferredSpeechVoice?.lang || 'zh-TW';
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = preferredSpeechVoice?.lang || lang;
   utterance.voice = preferredSpeechVoice;
-  utterance.rate = preferredSpeechVoice?.name.includes('Meijia') ? 0.68 : 0.72;
-  utterance.pitch = preferredSpeechVoice?.name.includes('Meijia') ? 1 : 1.08;
+  utterance.rate = lang.toLowerCase().startsWith('en') ? 0.82 : preferredSpeechVoice?.name.includes('Meijia') ? 0.68 : 0.72;
+  utterance.pitch = lang.toLowerCase().startsWith('en') ? 1.02 : preferredSpeechVoice?.name.includes('Meijia') ? 1 : 1.08;
   utterance.volume = 1;
   pendingSpeechTimeout = window.setTimeout(() => {
     window.speechSynthesis.speak(utterance);
@@ -453,12 +468,60 @@ const handleTap = (actor: AnimalActor) => {
 
   playTone();
   window.setTimeout(() => {
-    playVoiceName(actor.definition.audioKey, actor.definition.nameZh);
+    if (actor.definition.audioKey) {
+      playVoiceName(
+        actor.definition.audioKey,
+        actor.definition.speechText || actor.definition.nameZh,
+        actor.definition.speechLang || 'zh-TW'
+      );
+      return;
+    }
+
+    speakText(actor.definition.speechText || actor.definition.nameZh, actor.definition.speechLang || 'en-US');
   }, 110);
 };
 
+const clearActors = () => {
+  for (const actor of actors) {
+    actor.element.remove();
+  }
+  actors.length = 0;
+};
+
+const showModePanel = () => {
+  running = false;
+  currentVoiceAudio?.pause();
+  if (speechReady) {
+    window.speechSynthesis.cancel();
+  }
+  if (pendingSpeechTimeout !== null) {
+    window.clearTimeout(pendingSpeechTimeout);
+    pendingSpeechTimeout = null;
+  }
+  clearActors();
+  modePanel?.classList.remove('is-hidden');
+  homeButton?.classList.remove('is-visible');
+  startButton?.classList.add('is-hidden');
+  shell?.classList.remove('is-running');
+};
+
+const selectMode = (mode: GameMode) => {
+  currentMode = mode;
+  running = false;
+  clearActors();
+  modePanel?.classList.add('is-hidden');
+  homeButton?.classList.add('is-visible');
+  const labels = MODE_LABELS[mode];
+  startButton!.textContent = audioUnlocked ? `玩${labels.title}` : `開始${labels.title}`;
+  if (audioUnlocked) {
+    startGame();
+    return;
+  }
+  startButton?.classList.remove('is-hidden');
+};
+
 const startGame = () => {
-  if (running) {
+  if (running || !currentMode) {
     return;
   }
 
@@ -495,15 +558,21 @@ const setMuted = (nextMuted: boolean) => {
 };
 
 startButton?.addEventListener('click', startGame);
+homeButton?.addEventListener('click', showModePanel);
+for (const button of modeButtons) {
+  button.addEventListener('click', () => {
+    const mode = button.dataset.mode as GameMode | undefined;
+    if (mode) {
+      selectMode(mode);
+    }
+  });
+}
 soundToggle?.addEventListener('click', () => setMuted(!muted));
 
 prepareAudio();
-refreshPreferredSpeechVoice();
-if (speechReady) {
-  window.speechSynthesis.addEventListener('voiceschanged', refreshPreferredSpeechVoice);
-}
 setMuted(false);
+showModePanel();
 
 if (new URLSearchParams(window.location.search).get('autostart') === '1') {
-  startGame();
+  selectMode('animals');
 }

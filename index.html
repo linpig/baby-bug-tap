@@ -10,9 +10,30 @@
     <div id="app">
       <main id="game-shell" aria-label="寶寶小昆蟲動物點點遊戲">
         <div id="game-container"></div>
+        <section id="mode-panel" aria-label="選擇遊戲版本">
+          <div class="mode-panel__content">
+            <p class="mode-panel__eyebrow">寶寶點點遊戲</p>
+            <h1 class="mode-panel__title">選擇想玩的版本</h1>
+            <div class="mode-grid">
+              <button class="mode-option" type="button" data-mode="animals">
+                <strong>昆蟲動物</strong>
+                <span>可愛昆蟲與小動物</span>
+              </button>
+              <button class="mode-option" type="button" data-mode="letters">
+                <strong>英文字母</strong>
+                <span>A 到 Z 英文發音</span>
+              </button>
+              <button class="mode-option" type="button" data-mode="numbers">
+                <strong>數字</strong>
+                <span>0 到 9 英文發音</span>
+              </button>
+            </div>
+          </div>
+        </section>
         <button id="sound-toggle" type="button" aria-label="關閉聲音" aria-pressed="false">
           <span aria-hidden="true">🔊</span>
         </button>
+        <button id="home-button" type="button" aria-label="回到選單">⌂</button>
         <button id="start-button" type="button">開始</button>
       </main>
     </div>
