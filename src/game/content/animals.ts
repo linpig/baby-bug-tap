@@ -115,7 +115,18 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-snail',
     movementType: 'crawl',
     size: 86,
-    speedRange: [8, 16]
+    renderScale: {
+      x: 1.2,
+      y: 0.88
+    },
+    speedRange: [8, 16],
+    animation: {
+      frameOffsetsY: [0, -1, -1, 0],
+      frameTilts: [0, 1, 1, 0],
+      fps: 4,
+      frames: 4,
+      path: 'assets/sprites/snail-strip.svg'
+    }
   },
   {
     id: 'frog',
@@ -172,7 +183,14 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-beetle',
     movementType: 'crawl',
     size: 86,
-    speedRange: [16, 28]
+    speedRange: [16, 28],
+    animation: {
+      frameOffsetsY: [0, -1, 0, -1],
+      frameTilts: [0, 1, 0, -1],
+      fps: 6,
+      frames: 4,
+      path: 'assets/sprites/beetle-strip.svg'
+    }
   },
   {
     id: 'grasshopper',
@@ -181,7 +199,18 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-grasshopper',
     movementType: 'hop',
     size: 88,
-    speedRange: [24, 38]
+    renderScale: {
+      x: 1.14,
+      y: 0.9
+    },
+    speedRange: [24, 38],
+    animation: {
+      frameOffsetsY: [0, -3, 0, -2],
+      frameTilts: [0, -3, 1, -2],
+      fps: 6,
+      frames: 4,
+      path: 'assets/sprites/grasshopper-strip.svg'
+    }
   },
   {
     id: 'firefly',
@@ -190,7 +219,14 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-firefly',
     movementType: 'fly',
     size: 82,
-    speedRange: [24, 40]
+    speedRange: [24, 40],
+    animation: {
+      frameOffsetsY: [-1, 0, -1, 0],
+      frameTilts: [0, 1, 0, -1],
+      fps: 8,
+      frames: 4,
+      path: 'assets/sprites/firefly-strip.svg'
+    }
   },
   {
     id: 'duck',
@@ -199,7 +235,18 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-duck',
     movementType: 'hop',
     size: 90,
-    speedRange: [22, 34]
+    renderScale: {
+      x: 1.08,
+      y: 0.94
+    },
+    speedRange: [22, 34],
+    animation: {
+      frameOffsetsY: [0, -2, 1, -1],
+      frameTilts: [0, -2, 1, -1],
+      fps: 6,
+      frames: 4,
+      path: 'assets/sprites/duck-strip.svg'
+    }
   },
   {
     id: 'rabbit',
@@ -208,7 +255,14 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-rabbit',
     movementType: 'hop',
     size: 92,
-    speedRange: [24, 38]
+    speedRange: [24, 38],
+    animation: {
+      frameOffsetsY: [0, -2, 1, -2],
+      frameTilts: [0, -1, 1, -1],
+      fps: 5,
+      frames: 4,
+      path: 'assets/sprites/rabbit-strip.svg'
+    }
   },
   {
     id: 'cat',
@@ -217,7 +271,18 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-cat',
     movementType: 'crawl',
     size: 92,
-    speedRange: [18, 28]
+    renderScale: {
+      x: 1.1,
+      y: 0.94
+    },
+    speedRange: [18, 28],
+    animation: {
+      frameOffsetsY: [0, -1, 0, -1],
+      frameTilts: [0, 1, 0, -1],
+      fps: 6,
+      frames: 4,
+      path: 'assets/sprites/cat-strip.svg'
+    }
   },
   {
     id: 'dog',
@@ -226,7 +291,18 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-dog',
     movementType: 'crawl',
     size: 94,
-    speedRange: [18, 30]
+    renderScale: {
+      x: 1.16,
+      y: 0.95
+    },
+    speedRange: [18, 30],
+    animation: {
+      frameOffsetsY: [0, -1, 0, -1],
+      frameTilts: [0, 1, 0, -1],
+      fps: 6,
+      frames: 4,
+      path: 'assets/sprites/dog-strip.svg'
+    }
   },
   {
     id: 'turtle',
@@ -235,7 +311,18 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-turtle',
     movementType: 'crawl',
     size: 90,
-    speedRange: [10, 18]
+    renderScale: {
+      x: 1.14,
+      y: 0.9
+    },
+    speedRange: [10, 18],
+    animation: {
+      frameOffsetsY: [0, -1, 1, -1],
+      frameTilts: [0, 1, 0, -1],
+      fps: 4,
+      frames: 4,
+      path: 'assets/sprites/turtle-strip.svg'
+    }
   },
   {
     id: 'chick',
@@ -244,7 +331,14 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-chick',
     movementType: 'hop',
     size: 82,
-    speedRange: [24, 36]
+    speedRange: [24, 36],
+    animation: {
+      frameOffsetsY: [0, -2, 1, -2],
+      frameTilts: [0, -1, 1, -1],
+      fps: 6,
+      frames: 4,
+      path: 'assets/sprites/chick-strip.svg'
+    }
   },
   {
     id: 'owl',
@@ -253,7 +347,18 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-owl',
     movementType: 'fly',
     size: 92,
-    speedRange: [22, 36]
+    renderScale: {
+      x: 1.08,
+      y: 0.96
+    },
+    speedRange: [22, 36],
+    animation: {
+      frameOffsetsY: [-1, -2, 0, -2],
+      frameTilts: [0, -2, 1, -2],
+      fps: 5,
+      frames: 4,
+      path: 'assets/sprites/owl-strip.svg'
+    }
   },
   {
     id: 'squirrel',
@@ -262,6 +367,17 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-squirrel',
     movementType: 'hop',
     size: 90,
-    speedRange: [22, 34]
+    renderScale: {
+      x: 1.12,
+      y: 0.98
+    },
+    speedRange: [22, 34],
+    animation: {
+      frameOffsetsY: [0, -2, 0, -1],
+      frameTilts: [0, -1, 1, -1],
+      fps: 5,
+      frames: 4,
+      path: 'assets/sprites/squirrel-strip.svg'
+    }
   }
 ];
