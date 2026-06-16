@@ -43,7 +43,14 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-ladybug',
     movementType: 'crawl',
     size: 82,
-    speedRange: [18, 30]
+    speedRange: [18, 30],
+    animation: {
+      frameOffsetsY: [0, -1, 0, -1],
+      frameTilts: [0, 1, 0, -1],
+      fps: 6,
+      frames: 4,
+      path: 'assets/sprites/ladybug-strip.svg'
+    }
   },
   {
     id: 'bee',
@@ -52,7 +59,14 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-bee',
     movementType: 'fly',
     size: 82,
-    speedRange: [30, 48]
+    speedRange: [30, 48],
+    animation: {
+      frameOffsetsY: [-1, 1, -1, 1],
+      frameTilts: [-1, 1, -1, 1],
+      fps: 9,
+      frames: 4,
+      path: 'assets/sprites/bee-strip.svg'
+    }
   },
   {
     id: 'ant',
@@ -77,7 +91,14 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-caterpillar',
     movementType: 'crawl',
     size: 94,
-    speedRange: [14, 24]
+    speedRange: [14, 24],
+    animation: {
+      frameOffsetsY: [0, -1, 0, -1],
+      frameTilts: [0, 1, 0, -1],
+      fps: 5,
+      frames: 4,
+      path: 'assets/sprites/caterpillar-strip.svg'
+    }
   },
   {
     id: 'snail',
@@ -111,7 +132,14 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-bird',
     movementType: 'fly',
     size: 86,
-    speedRange: [26, 42]
+    speedRange: [26, 42],
+    animation: {
+      frameOffsetsY: [0, -1, 1, -1],
+      frameTilts: [0, -3, 2, -2],
+      fps: 7,
+      frames: 4,
+      path: 'assets/sprites/bird-strip.svg'
+    }
   },
   {
     id: 'dragonfly',
@@ -120,7 +148,14 @@ export const ANIMALS: AnimalDefinition[] = [
     audioKey: 'voice-dragonfly',
     movementType: 'fly',
     size: 90,
-    speedRange: [30, 46]
+    speedRange: [30, 46],
+    animation: {
+      frameOffsetsY: [-1, 0, -1, 0],
+      frameTilts: [-1, 1, -1, 1],
+      fps: 10,
+      frames: 4,
+      path: 'assets/sprites/dragonfly-strip.svg'
+    }
   },
   {
     id: 'beetle',
