@@ -6,6 +6,7 @@ const envPath = path.join(cwd, '.env.local');
 const outputDir = path.join(cwd, 'public', 'assets', 'audio', 'voice');
 const letters = Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
 const onlyMode = process.argv.find((arg) => arg.startsWith('--only='))?.split('=')[1];
+const tiffyVoiceId = '1AKkSX7KMPHIWuz76m0n';
 const teacherVoiceSettings = {
   stability: 0.88,
   similarity_boost: 0.78,
@@ -26,7 +27,7 @@ const letterPronunciations = {
   K: 'kay',
   L: 'el',
   M: 'em',
-  N: 'en',
+  N: 'N',
   O: 'oh',
   P: 'pee',
   Q: 'cue',
@@ -76,6 +77,7 @@ const voiceLines = [
     id: `letter-${letter.toLowerCase()}`,
     text: letterPronunciations[letter],
     languageCode: 'en',
+    voiceId: tiffyVoiceId,
     voiceSettings: teacherVoiceSettings
   }))
 ];
@@ -133,7 +135,8 @@ if (!apiKey) {
 await mkdir(outputDir, { recursive: true });
 
 for (const line of selectedVoiceLines) {
-  const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}?output_format=mp3_44100_128`, {
+  const selectedVoiceId = line.voiceId || voiceId;
+  const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${selectedVoiceId}?output_format=mp3_44100_128`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
