@@ -4,6 +4,8 @@ import type { AnimalDefinition } from './game/content/animals';
 import './styles.css';
 
 interface AnimalActor {
+  animElapsed: number;
+  currentFrame: number;
   id: string;
   definition: AnimalDefinition;
   element: HTMLButtonElement;
@@ -16,6 +18,20 @@ interface AnimalActor {
   nextHopAt: number;
   size: number;
 }
+
+const applySpriteFrame = (actor: AnimalActor) => {
+  const animation = actor.definition.animation;
+  if (!animation) {
+    return;
+  }
+
+  const frameProgress = animation.frames === 1 ? 0 : (actor.currentFrame / (animation.frames - 1)) * 100;
+  const offsetY = animation.frameOffsetsY?.[actor.currentFrame] ?? 0;
+  const tilt = animation.frameTilts?.[actor.currentFrame] ?? 0;
+
+  actor.visual.style.backgroundPositionX = `${frameProgress}%`;
+  actor.visual.style.transform = `translate3d(0, ${offsetY}px, 0) rotate(${tilt}deg)`;
+};
 
 const shell = document.querySelector<HTMLElement>('#game-shell');
 const gameLayer = document.querySelector<HTMLElement>('#game-container');
@@ -99,7 +115,6 @@ const createActor = (definition: AnimalDefinition): AnimalActor => {
     sprite.className = 'animal-sprite';
     sprite.style.setProperty('--frames', String(definition.animation.frames));
     sprite.style.setProperty('--sprite-url', `url("${definition.animation.path}")`);
-    sprite.style.animationDuration = `${definition.animation.frames / definition.animation.fps}s`;
     visual = sprite;
   } else {
     const image = document.createElement('img');
@@ -123,6 +138,8 @@ const createActor = (definition: AnimalDefinition): AnimalActor => {
   }
 
   const actor: AnimalActor = {
+    animElapsed: randomBetween(0, 0.4),
+    currentFrame: 0,
     id: `${definition.id}-${crypto.randomUUID()}`,
     definition,
     element,
@@ -135,6 +152,10 @@ const createActor = (definition: AnimalDefinition): AnimalActor => {
     nextHopAt: randomBetween(0.4, 1.5),
     size
   };
+
+  if (definition.animation) {
+    applySpriteFrame(actor);
+  }
 
   element.addEventListener('pointerdown', (event) => {
     event.preventDefault();
@@ -193,6 +214,15 @@ const updateActor = (actor: AnimalActor, deltaSeconds: number, elapsedSeconds: n
   const tilt = actor.definition.movementType === 'fly' ? Math.sin(actor.phase) * 5 : Math.sin(actor.phase) * 2;
   const flip = actor.vx < 0 ? -1 : 1;
   actor.element.style.transform = `translate3d(${actor.x - actor.size / 2}px, ${actor.y - actor.size / 2}px, 0) rotate(${tilt}deg) scaleX(${flip})`;
+
+  if (actor.definition.animation) {
+    actor.animElapsed += deltaSeconds;
+    const nextFrame = Math.floor(actor.animElapsed * actor.definition.animation.fps) % actor.definition.animation.frames;
+    if (nextFrame !== actor.currentFrame) {
+      actor.currentFrame = nextFrame;
+      applySpriteFrame(actor);
+    }
+  }
 };
 
 const tick = (time: number) => {

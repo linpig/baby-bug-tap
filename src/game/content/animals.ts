@@ -1,6 +1,8 @@
 export type MovementType = 'crawl' | 'fly' | 'hop';
 
 export interface SpriteAnimation {
+  frameOffsetsY?: number[];
+  frameTilts?: number[];
   fps: number;
   frames: number;
   path: string;
@@ -27,6 +29,8 @@ export const ANIMALS: AnimalDefinition[] = [
     size: 88,
     speedRange: [28, 44],
     animation: {
+      frameOffsetsY: [-2, 1, -1, 1],
+      frameTilts: [-3, 2, -2, 3],
       fps: 6,
       frames: 4,
       path: 'assets/sprites/butterfly-strip.svg'
@@ -59,6 +63,8 @@ export const ANIMALS: AnimalDefinition[] = [
     size: 78,
     speedRange: [18, 34],
     animation: {
+      frameOffsetsY: [0, -2, 0, -1],
+      frameTilts: [-2, 2, -1, 1],
       fps: 7,
       frames: 4,
       path: 'assets/sprites/ant-strip.svg'
@@ -91,6 +97,8 @@ export const ANIMALS: AnimalDefinition[] = [
     size: 88,
     speedRange: [22, 38],
     animation: {
+      frameOffsetsY: [1, -2, -5, -1],
+      frameTilts: [0, -2, 1, 0],
       fps: 5,
       frames: 4,
       path: 'assets/sprites/frog-strip.svg'
