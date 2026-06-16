@@ -21,6 +21,10 @@ const gameLayer = document.querySelector<HTMLElement>('#game-container');
 const soundToggle = document.querySelector<HTMLButtonElement>('#sound-toggle');
 const startButton = document.querySelector<HTMLButtonElement>('#start-button');
 
+document.addEventListener('dragstart', (event) => {
+  event.preventDefault();
+});
+
 const actors: AnimalActor[] = [];
 const TARGET_VISIBLE_ACTORS = 20;
 let muted = false;
@@ -84,12 +88,14 @@ const createActor = (definition: AnimalDefinition): AnimalActor => {
 
   element.className = `animal animal-${definition.movementType}`;
   element.type = 'button';
+  element.draggable = false;
   element.setAttribute('aria-label', definition.nameZh);
   element.style.width = `${size}px`;
   element.style.height = `${size}px`;
 
   image.alt = definition.nameZh;
   image.src = `assets/characters/${definition.id}.svg`;
+  image.draggable = false;
   element.append(image);
   gameLayer?.append(element);
 
@@ -116,6 +122,12 @@ const createActor = (definition: AnimalDefinition): AnimalActor => {
   element.addEventListener('pointerdown', (event) => {
     event.preventDefault();
     handleTap(actor);
+  });
+  element.addEventListener('dragstart', (event) => {
+    event.preventDefault();
+  });
+  image.addEventListener('dragstart', (event) => {
+    event.preventDefault();
   });
 
   return actor;

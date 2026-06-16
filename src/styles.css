@@ -21,6 +21,7 @@ body,
   height: 100%;
   margin: 0;
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 body {
@@ -104,6 +105,7 @@ body {
   will-change: transform;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  -webkit-user-drag: none;
 }
 
 .animal-fly {
@@ -116,6 +118,8 @@ body {
   display: block;
   pointer-events: none;
   filter: drop-shadow(0 8px 8px rgba(43, 94, 67, 0.18));
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
 .animal::before {
