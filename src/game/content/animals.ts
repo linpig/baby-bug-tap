@@ -96,8 +96,8 @@ export const ANIMALS: AnimalDefinition[] = [
     movementType: 'crawl',
     size: 94,
     renderScale: {
-      x: 1.46,
-      y: 0.82
+      x: 1.18,
+      y: 0.86
     },
     speedRange: [14, 24],
     animation: {
